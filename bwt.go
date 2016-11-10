@@ -34,7 +34,8 @@ func index(s string, ss []string) int {
 	return -1
 }
 
-// BWT returns the the Burrows-Wheeler Transform on a string
+// BWT returns the transformed string and an index list needed to perform the
+// inverse transform
 func BWT(s string) (string, []int) {
 	x := getRotations(s)
 	y := x
@@ -53,7 +54,8 @@ func BWT(s string) (string, []int) {
 	return takeLast(x), idxlist
 }
 
-// IBWT returns the inverse of the Burrows-Wheeler Transform on a string
+// IBWT returns the inverse of the Burrows-Wheeler Transform on a string,
+// given the transformed string and the index list
 func IBWT(s string, il []int) string {
 	t := ""
 	x := il[0]
