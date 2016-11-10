@@ -1,2 +1,2 @@
-# burrows-wheeler-go
-Golang Implementation of the Burrows-Wheeler Transform
+# bwt-go
+Golang implementation of the Burrows-Wheeler Transform
