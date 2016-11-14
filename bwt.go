@@ -5,6 +5,8 @@ import (
 	"strings"
 )
 
+const eofChar = "$"
+
 func rotate(s string) string {
 	return string(s[len(s)-1]) + string(s[:len(s)-1])
 }
@@ -34,34 +36,33 @@ func index(s string, ss []string) int {
 	return -1
 }
 
-// BWT returns the transformed string and an index list needed to perform the
-// inverse transform
-func BWT(s string) (string, []int) {
-	x := getRotations(s)
-	y := x
-	sort.Strings(y)
-	var idxlist []int
-	for _, e := range y {
-		i1 := index(e, x)
-		if i1 < len(s)-1 {
-			i1++
-		} else {
-			i1 = 0
+func findLast(ss []string) string {
+	for _, e := range ss {
+		if string(e[len(e)-1]) == "$" {
+			// Return the string up until the eofChar
+			return string(e[:len(e)-1])
 		}
-		i2 := index(x[i1], y)
-		idxlist = append(idxlist, i2)
 	}
-	return takeLast(x), idxlist
+	return ""
 }
 
-// IBWT returns the inverse of the Burrows-Wheeler Transform on a string,
-// given the transformed string and the index list
-func IBWT(s string, il []int) string {
-	t := ""
-	x := il[0]
-	for i := 0; i < len(s); i++ {
-		t += string(s[x])
-		x = il[x]
+// BWT returns the result of the Burrows-Wheeler Transform on a string
+func BWT(s string) string {
+	s = s + eofChar
+	x := getRotations(s)
+	sort.Strings(x)
+	return takeLast(x)
+}
+
+// IBWT returns the inverse of the Burrows-Wheeler Transform on a string
+func IBWT(s string) string {
+	x := strings.Split(s, "")
+	z := make([]string, len(s))
+	for i := 0; i < len(x); i++ {
+		for j := 0; j < len(x); j++ {
+			z[j] = x[j] + z[j]
+		}
+		sort.Strings(z)
 	}
-	return t
+	return findLast(z)
 }
