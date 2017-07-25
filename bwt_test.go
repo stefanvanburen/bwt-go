@@ -2,7 +2,7 @@ package BWT
 
 import "testing"
 
-var BWTtests = []struct {
+var NaiveBWTtests = []struct {
 	in  string
 	out string
 }{
@@ -12,30 +12,38 @@ var BWTtests = []struct {
 	{"dogwood", "do$oodwg"},
 }
 
-func TestBWT(t *testing.T) {
-	for _, tt := range BWTtests {
-		o := BWT(tt.in)
+func TestNaiveBWT(t *testing.T) {
+	for _, tt := range NaiveBWTtests {
+		o := NaiveBWT(tt.in)
 		if o != tt.out {
-			t.Errorf("BWT(%q) => %q, expected %q", tt.in, o, tt.out)
+			t.Errorf("NaiveBWT(%q) => %q, expected %q", tt.in, o, tt.out)
+		}
+		i := NaiveIBWT(tt.out)
+		if i != tt.in {
+			t.Errorf("NaiveIBWT(%q) => %q, expected %q", tt.out, i, tt.in)
 		}
 	}
 }
 
-var IBWTtests = []struct {
+var BWTtests = []struct {
 	in  string
 	out string
 }{
-	{"yh$e", "hey"},
-	{"annb$aa", "banana"},
-	{"e$elplepa", "appellee"},
-	{"do$oodwg", "dogwood"},
+	{"hey", "hye"},
+	// {"banana", "nnbaaa"},
+	// {"appellee", "eelplepa"},
+	// {"dogwood", "odoodwg"},
 }
 
-func TestIBWT(t *testing.T) {
-	for _, tt := range IBWTtests {
-		z := IBWT(tt.in)
-		if z != tt.out {
-			t.Errorf("IBWT(%q) => %q, expected %q", tt.in, z, tt.out)
+func TestBWT(t *testing.T) {
+	for _, tt := range BWTtests {
+		o, il := BWT(tt.in)
+		if o != tt.out {
+			t.Errorf("BWT(%q) => %q, expected %q", tt.in, o, tt.out)
+		}
+		i := IBWT(tt.out, il)
+		if i != tt.in {
+			t.Errorf("IBWT(%q) => %q, expected %q", tt.out, i, tt.in)
 		}
 	}
 }
