@@ -1,7 +1,6 @@
 package bwt
 
 import (
-	"fmt"
 	"sort"
 	"strings"
 )
@@ -16,8 +15,8 @@ func NaiveBWT(s string) string {
 	return takeLast(x)
 }
 
-// NaiveIBWT returns the inverse of the Burrows-Wheeler Transform on a string
-func NaiveIBWT(s string) string {
+// NaiveInverseBWT returns the inverse of the Burrows-Wheeler Transform on a string
+func NaiveInverseBWT(s string) string {
 	x := strings.Split(s, "")
 	z := make([]string, len(s))
 	for i := 0; i < len(x); i++ {
@@ -29,44 +28,39 @@ func NaiveIBWT(s string) string {
 	return findLast(z)
 }
 
-func IBWT(r string, il []int) string {
-	s := ""
-	i := il[0]
-	fmt.Println(r)
-	for z := 0; z < len(r); z++ {
-		fmt.Println(i)
-		s = s + string(r[i])
-		i = il[i]
-	}
-	return s
-}
+// IndexList is used to lower the complexity of the InverseBWT operation.
+type IndexList []int
 
 // BWT creates an indexlist for use with IBWT, to lower the complexity of IBWT
-func BWT(s string) (string, []int) {
-	il := make([]int, len(s))
+func BWT(s string) (string, IndexList) {
 	x := getRotations(s)
 	y := make([]string, len(x))
 	copy(y, x)
 	sort.Strings(y)
-	fmt.Println(x)
-	fmt.Println(y)
+	il := make(IndexList, len(s))
 	l := len(s)
 	for i, v := range y {
 		i1 := index(v, x)
-		//fmt.Println("i1 first: ", i1)
 		if i1 < l-1 {
 			i1++
 		} else {
 			i1 = 0
 		}
-		//fmt.Println("i1: ", i1)
 		i2 := index(x[i1], y)
-		//fmt.Println("i2: ", i2)
 		il[i] = i2
-		//fmt.Println(il)
 	}
-	fmt.Println(il)
 	return takeLast(y), il
+}
+
+// InverseBWT returns the inverse of a BWT transformation, using an index list.
+func InverseBWT(r string, il IndexList) string {
+	s := ""
+	i := il[0]
+	for z := 0; z < len(r); z++ {
+		s = s + string(r[i])
+		i = il[i]
+	}
+	return s
 }
 
 // MTF returns the Move-To-Front Coding of a string
@@ -80,9 +74,7 @@ func MTF(s string) []int {
 		mtf = append(mtf, j)
 		// Move it to the front
 		char := string(a[j])
-		fmt.Println(a)
 		a = a[:j] + a[j+1:]
-		fmt.Println(a)
 		a = char + a
 	}
 	return mtf
@@ -109,11 +101,8 @@ func takeLast(ss []string) string {
 }
 
 func index(s string, ss []string) int {
-	//fmt.Println(s)
-	//fmt.Println(ss)
 	for i, e := range ss {
 		if strings.Compare(s, e) == 0 {
-			//fmt.Println(i)
 			return i
 		}
 	}
