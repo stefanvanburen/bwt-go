@@ -1,27 +1,25 @@
-name: Go
+name: Build and Test
+
 on: [push]
+
 jobs:
 
   build:
-    name: Build
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macOS-latest]
-    
+    name: Build and Test
+    runs-on: ubuntu-latest
+
     steps:
 
-    - name: Set up Go 1.12
-      uses: actions/setup-go@v1
+    - name: Set up Go 1.15
+      uses: actions/setup-go@v2
       with:
-        go-version: 1.12
-      id: go
+        go-version: 1.15
 
-    - name: Check out code into the Go module directory
-      uses: actions/checkout@v1
+    - name: Checkout
+      uses: actions/checkout@v2
 
-    - name: Get dependencies
-      run: |
-        go mod download
-    - name: Test
+    - name: Download dependencies
+      run: go mod download
+
+    - name: Run tests
       run: go test -v -race ./...
