@@ -3,7 +3,7 @@ package bwt
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/matryer/is"
 )
 
 var NaiveBWTtests = []struct {
@@ -17,9 +17,11 @@ var NaiveBWTtests = []struct {
 }
 
 func TestNaiveBWT(t *testing.T) {
+	is := is.New(t)
+
 	for _, tt := range NaiveBWTtests {
-		assert.Equal(t, NaiveBWT(tt.in), tt.out)
-		assert.Equal(t, NaiveInverseBWT(tt.out), tt.in)
+		is.Equal(NaiveBWT(tt.in), tt.out)
+		is.Equal(NaiveInverseBWT(tt.out), tt.in)
 	}
 }
 
@@ -34,9 +36,11 @@ var BWTtests = []struct {
 }
 
 func TestBWT(t *testing.T) {
+	is := is.New(t)
+
 	for _, tt := range BWTtests {
 		o, _ := BWT(tt.in)
-		assert.Equal(t, o, tt.out)
+		is.Equal(o, tt.out)
 
 		// TODO: this method doesn't work
 		// i := IBWT(tt.out, il)

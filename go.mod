@@ -1,5 +1,5 @@
 module github.com/svanburen/bwt-go
 
-require github.com/stretchr/testify v1.6.1
+go 1.15
 
-go 1.13
+require github.com/matryer/is v1.4.0
