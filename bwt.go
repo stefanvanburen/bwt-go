@@ -87,12 +87,13 @@ func rotate(s string) string {
 	return string(s[len(s)-1]) + string(s[:len(s)-1])
 }
 
-func getRotations(s string) (ss []string) {
+func getRotations(s string) []string {
+	rotations := make([]string, len(s))
 	for i := 0; i < len(s); i++ {
-		ss = append(ss, s)
+		rotations[i] = s
 		s = rotate(s)
 	}
-	return ss
+	return rotations
 }
 
 func takeLast(ss []string) string {
