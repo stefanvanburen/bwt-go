@@ -1,3 +1,6 @@
+// Package bwt implements variants of the Burrows-Wheeler transform algorithm [1].
+//
+// [1]: https://en.wikipedia.org/wiki/Burrows%E2%80%93Wheeler_transform
 package bwt
 
 import (
@@ -31,7 +34,7 @@ func NaiveInverseBWT(s string) string {
 // IndexList is used to lower the complexity of the InverseBWT operation.
 type IndexList []int
 
-// BWT creates an indexlist for use with IBWT, to lower the complexity of IBWT
+// BWT creates an indexlist for use with InverseBWT.
 func BWT(s string) (string, IndexList) {
 	x := getRotations(s)
 	y := make([]string, len(x))
@@ -64,7 +67,7 @@ func InverseBWT(r string, il IndexList) string {
 }
 
 // MTF returns the Move-To-Front Coding of a string
-// Typically used on a Burrows-Wheeler Transformed string
+// Typically used on a Burrows-Wheeler transformed string
 func MTF(s string) []int {
 	a := alphabet(s)
 	mtf := make([]int, len(s))
