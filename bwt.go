@@ -8,28 +8,33 @@ import (
 	"strings"
 )
 
+// EOFChar is used by the BWT and InverseBWT functions to mark the end of the
+// input string. It must be unique within the string.
 var EOFChar = "$"
 
-// BWT returns the result of the Burrows-Wheeler Transform on a string, using
-// the EOFChar as a marker.
-func BWT(s string) string {
-	s = s + EOFChar
-	x := getRotations(s)
-	sort.Strings(x)
-	return takeLast(x)
+// BWT returns the result of the Burrows-Wheeler Transform on the input string,
+// using the EOFChar as a marker.
+func BWT(input string) string {
+	input = input + EOFChar
+	rotations := getRotations(input)
+	sort.Strings(rotations)
+	return takeLast(rotations)
 }
 
-// InverseBWT returns the inverse of the Burrows-Wheeler Transform on a string,
-// using the EOFChar as a marker.
-func InverseBWT(s string) string {
-	x := strings.Split(s, "")
-	z := make([]string, len(s))
-	for i := 0; i < len(x); i++ {
-		for j := 0; j < len(x); j++ {
-			z[j] = x[j] + z[j]
+// InverseBWT returns the inverse of the Burrows-Wheeler Transform on the input
+// string, using the EOFChar as a marker.
+func InverseBWT(input string) string {
+	characters := strings.Split(input, "")
+
+	z := make([]string, len(input))
+
+	for i := 0; i < len(characters); i++ {
+		for j := 0; j < len(characters); j++ {
+			z[j] = characters[j] + z[j]
 		}
 		sort.Strings(z)
 	}
+
 	return findLast(z)
 }
 
@@ -46,19 +51,17 @@ func getRotations(s string) []string {
 	return rotations
 }
 
-func takeLast(ss []string) string {
-	z := ""
+func takeLast(ss []string) (lastCharacters string) {
 	for _, s := range ss {
-		z += string(s[len(s)-1])
+		lastCharacters += string(s[len(s)-1])
 	}
-	return z
+	return lastCharacters
 }
 
 func findLast(ss []string) string {
-	for _, e := range ss {
-		if string(e[len(e)-1]) == EOFChar {
-			// Return the string up until the eofChar
-			return string(e[:len(e)-1])
+	for _, str := range ss {
+		if strings.HasSuffix(str, EOFChar) {
+			return strings.TrimSuffix(str, EOFChar)
 		}
 	}
 	return ""
