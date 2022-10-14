@@ -38,10 +38,13 @@ func InverseBWT(input string) string {
 	return findLast(z)
 }
 
+// rotate returns a rotated version of s where the last character becomes
+// the first.
 func rotate(s string) string {
 	return string(s[len(s)-1]) + string(s[:len(s)-1])
 }
 
+// getRotations returns all rotations of s.
 func getRotations(s string) []string {
 	rotations := make([]string, len(s))
 	for i := 0; i < len(s); i++ {
@@ -51,6 +54,8 @@ func getRotations(s string) []string {
 	return rotations
 }
 
+// takeLast returns a string containing the last character of all of the
+// strings in ss.
 func takeLast(ss []string) (lastCharacters string) {
 	for _, s := range ss {
 		lastCharacters += string(s[len(s)-1])
@@ -58,6 +63,7 @@ func takeLast(ss []string) (lastCharacters string) {
 	return lastCharacters
 }
 
+// findLast returns the string in ss that has EOFChar as a suffix.
 func findLast(ss []string) string {
 	for _, str := range ss {
 		if strings.HasSuffix(str, EOFChar) {
