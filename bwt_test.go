@@ -1,10 +1,6 @@
 package bwt
 
-import (
-	"testing"
-
-	"github.com/matryer/is"
-)
+import "testing"
 
 func TestNaiveBWT(t *testing.T) {
 	tests := map[string]struct {
@@ -19,10 +15,13 @@ func TestNaiveBWT(t *testing.T) {
 
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
-			is := is.New(t)
-
-			is.Equal(BWT(tt.in), tt.out)
-			is.Equal(InverseBWT(tt.out), tt.in)
+			t.Parallel()
+			if got := BWT(tt.in); got != tt.out {
+				t.Errorf("BWT(tt.in) != tt.out, got %v", got)
+			}
+			if got := InverseBWT(tt.out); got != tt.in {
+				t.Errorf("InverseBWT(tt.out) != tt.in, got %v", got)
+			}
 		})
 	}
 }
