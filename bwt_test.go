@@ -12,8 +12,8 @@ func TestNaiveBWT(t *testing.T) {
 		"appellee": {"appellee", "e$elplepa"},
 		"dogwood":  {"dogwood", "do$oodwg"},
 	}
-
 	for name, tt := range tests {
+		tt := tt
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 			if got := BWT(tt.in); got != tt.out {
