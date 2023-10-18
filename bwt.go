@@ -4,7 +4,7 @@
 package bwt
 
 import (
-	"sort"
+	"slices"
 	"strings"
 )
 
@@ -17,7 +17,7 @@ var EOFChar = "$"
 func BWT(input string) string {
 	input = input + EOFChar
 	rotations := getRotations(input)
-	sort.Strings(rotations)
+	slices.Sort(rotations)
 	return takeLast(rotations)
 }
 
@@ -32,7 +32,7 @@ func InverseBWT(input string) string {
 		for j := 0; j < len(characters); j++ {
 			z[j] = characters[j] + z[j]
 		}
-		sort.Strings(z)
+		slices.Sort(z)
 	}
 
 	return findLast(z)

@@ -1,3 +1,3 @@
 module github.com/svanburen/bwt-go
 
-go 1.15
+go 1.21
