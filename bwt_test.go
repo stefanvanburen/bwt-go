@@ -3,6 +3,7 @@ package bwt
 import "testing"
 
 func TestNaiveBWT(t *testing.T) {
+	t.Parallel()
 	tests := map[string]struct {
 		in  string
 		out string
