@@ -1,6 +1,6 @@
-// Package bwt implements variants of the Burrows-Wheeler transform algorithm [1].
+// Package bwt implements variants of the [Burrows-Wheeler transform].
 //
-// [1]: https://en.wikipedia.org/wiki/Burrows%E2%80%93Wheeler_transform
+// [Burrows-Wheeler transform]: https://en.wikipedia.org/wiki/Burrows%E2%80%93Wheeler_transform
 package bwt
 
 import (
