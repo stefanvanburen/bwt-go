@@ -14,13 +14,20 @@ func TestNaiveBWT(t *testing.T) {
 		"dogwood":  {"dogwood", "do$oodwg"},
 	}
 	for name, tt := range tests {
-		tt := tt
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
-			if got := BWT(tt.in); got != tt.out {
+			got, err := BWT(tt.in, 28)
+			if err != nil {
+				t.Fatalf("got err %v, expected nil", err)
+			}
+			if got != tt.out {
 				t.Errorf("BWT(tt.in) != tt.out, got %v", got)
 			}
-			if got := InverseBWT(tt.out); got != tt.in {
+			got, err = InverseBWT(tt.out, '$')
+			if err != nil {
+				t.Fatalf("got err %v, expected nil", err)
+			}
+			if got != tt.in {
 				t.Errorf("InverseBWT(tt.out) != tt.in, got %v", got)
 			}
 		})

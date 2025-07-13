@@ -4,26 +4,31 @@
 package bwt
 
 import (
+	"fmt"
 	"slices"
 	"strings"
 )
 
-// EOFChar is used by the BWT and InverseBWT functions to mark the end of the
-// input string. It must be unique within the string.
-var EOFChar = "$"
-
 // BWT returns the result of the Burrows-Wheeler Transform on the input string,
-// using the EOFChar as a marker.
-func BWT(input string) string {
-	input = input + EOFChar
+// using the eofCharacter as a marker. The eofCharacter cannot exist in the
+// input string.
+func BWT(input string, eofCharacter rune) (string, error) {
+	if strings.ContainsRune(input, eofCharacter) {
+		return "", fmt.Errorf("input contains eofCharacter")
+	}
+	input += string(eofCharacter)
 	rotations := getRotations(input)
 	slices.Sort(rotations)
-	return takeLast(rotations)
+	var lastCharacters string
+	for _, rotation := range rotations {
+		lastCharacters += string(rotation[len(rotation)-1])
+	}
+	return lastCharacters, nil
 }
 
 // InverseBWT returns the inverse of the Burrows-Wheeler Transform on the input
-// string, using the EOFChar as a marker.
-func InverseBWT(input string) string {
+// string, using the eofCharacter as a marker.
+func InverseBWT(input string, eofCharacter rune) (string, error) {
 	characters := strings.Split(input, "")
 
 	z := make([]string, len(input))
@@ -35,7 +40,12 @@ func InverseBWT(input string) string {
 		slices.Sort(z)
 	}
 
-	return findLast(z)
+	for _, str := range z {
+		if strings.HasSuffix(str, string(eofCharacter)) {
+			return strings.TrimSuffix(str, string(eofCharacter)), nil
+		}
+	}
+	return "", fmt.Errorf("did not find shift with eofCharacter as a suffix - invariant broken")
 }
 
 // rotate returns a rotated version of s where the last character becomes
@@ -47,28 +57,9 @@ func rotate(s string) string {
 // getRotations returns all rotations of s.
 func getRotations(s string) []string {
 	rotations := make([]string, len(s))
-	for i := 0; i < len(s); i++ {
+	for i := range len(s) {
 		rotations[i] = s
 		s = rotate(s)
 	}
 	return rotations
-}
-
-// takeLast returns a string containing the last character of all of the
-// strings in ss.
-func takeLast(ss []string) (lastCharacters string) {
-	for _, s := range ss {
-		lastCharacters += string(s[len(s)-1])
-	}
-	return lastCharacters
-}
-
-// findLast returns the string in ss that has EOFChar as a suffix.
-func findLast(ss []string) string {
-	for _, str := range ss {
-		if strings.HasSuffix(str, EOFChar) {
-			return strings.TrimSuffix(str, EOFChar)
-		}
-	}
-	return ""
 }
