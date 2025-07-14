@@ -16,7 +16,7 @@ func TestNaiveBWT(t *testing.T) {
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
-			got, err := BWT(tt.in, 28)
+			got, err := BWT(tt.in, '$')
 			if err != nil {
 				t.Fatalf("got err %v, expected nil", err)
 			}
