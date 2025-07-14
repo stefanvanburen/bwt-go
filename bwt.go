@@ -33,8 +33,8 @@ func InverseBWT(input string, eofCharacter rune) (string, error) {
 
 	z := make([]string, len(input))
 
-	for i := 0; i < len(characters); i++ {
-		for j := 0; j < len(characters); j++ {
+	for range len(characters) {
+		for j := range len(characters) {
 			z[j] = characters[j] + z[j]
 		}
 		slices.Sort(z)
