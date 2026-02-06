@@ -19,18 +19,18 @@ func BWT(input string, eofCharacter rune) (string, error) {
 	input += string(eofCharacter)
 	rotations := getRotations(input)
 	slices.Sort(rotations)
-	var lastCharacters string
+	var buf strings.Builder
+	buf.Grow(len(input))
 	for _, rotation := range rotations {
-		lastCharacters += string(rotation[len(rotation)-1])
+		buf.WriteRune(rune(rotation[len(rotation)-1]))
 	}
-	return lastCharacters, nil
+	return buf.String(), nil
 }
 
 // InverseBWT returns the inverse of the Burrows-Wheeler Transform on the input
 // string, using the eofCharacter as a marker.
 func InverseBWT(input string, eofCharacter rune) (string, error) {
 	characters := strings.Split(input, "")
-
 	z := make([]string, len(input))
 
 	for range len(characters) {
@@ -41,8 +41,8 @@ func InverseBWT(input string, eofCharacter rune) (string, error) {
 	}
 
 	for _, str := range z {
-		if strings.HasSuffix(str, string(eofCharacter)) {
-			return strings.TrimSuffix(str, string(eofCharacter)), nil
+		if before, ok := strings.CutSuffix(str, string(eofCharacter)); ok {
+			return before, nil
 		}
 	}
 	return "", fmt.Errorf("did not find shift with eofCharacter as a suffix - invariant broken")
