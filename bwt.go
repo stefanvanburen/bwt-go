@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"slices"
 	"strings"
+	"unicode/utf8"
 )
 
 // BWT returns the result of the Burrows-Wheeler Transform on the input string,
@@ -22,7 +23,8 @@ func BWT(input string, eofCharacter rune) (string, error) {
 	var buf strings.Builder
 	buf.Grow(len(input))
 	for _, rotation := range rotations {
-		buf.WriteRune(rune(rotation[len(rotation)-1]))
+		lastRune, _ := utf8.DecodeLastRuneInString(rotation)
+		buf.WriteRune(lastRune)
 	}
 	return buf.String(), nil
 }
@@ -31,7 +33,7 @@ func BWT(input string, eofCharacter rune) (string, error) {
 // string, using the eofCharacter as a marker.
 func InverseBWT(input string, eofCharacter rune) (string, error) {
 	characters := strings.Split(input, "")
-	z := make([]string, len(input))
+	z := make([]string, len(characters))
 
 	for range len(characters) {
 		for j := range len(characters) {
@@ -48,18 +50,22 @@ func InverseBWT(input string, eofCharacter rune) (string, error) {
 	return "", fmt.Errorf("did not find shift with eofCharacter as a suffix - invariant broken")
 }
 
-// rotate returns a rotated version of s where the last character becomes
+// rotate returns a rotated version of s where the last rune becomes
 // the first.
-func rotate(s string) string {
-	return string(s[len(s)-1]) + string(s[:len(s)-1])
+func rotate(s []rune) []rune {
+	rotated := make([]rune, len(s))
+	rotated[0] = s[len(s)-1]
+	copy(rotated[1:], s[:len(s)-1])
+	return rotated
 }
 
 // getRotations returns all rotations of s.
 func getRotations(s string) []string {
-	rotations := make([]string, len(s))
-	for i := range len(s) {
-		rotations[i] = s
-		s = rotate(s)
+	runes := []rune(s)
+	rotations := make([]string, len(runes))
+	for i := range len(runes) {
+		rotations[i] = string(runes)
+		runes = rotate(runes)
 	}
 	return rotations
 }

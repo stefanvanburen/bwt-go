@@ -12,6 +12,7 @@ func TestNaiveBWT(t *testing.T) {
 		"banana":   {"banana", "annb$aa"},
 		"appellee": {"appellee", "e$elplepa"},
 		"dogwood":  {"dogwood", "do$oodwg"},
+		"unicode":  {"héllo", "o$éllh"},
 	}
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
