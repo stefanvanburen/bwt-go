@@ -1,3 +1,3 @@
-module github.com/svanburen/bwt-go
+module go.vanburen.xyz/bwt-go
 
 go 1.25.7
